@@ -54,6 +54,50 @@ const AutoComplete = <T,>({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    setIsOpen(true);
+    if (onInputChange) {
+      onInputChange(value);
+    }
+  };
+
+  const handleOptionClick = (option: T) => {
+    if (multiple) {
+      if (Array.isArray(value)) {
+        onChange([...value, option]);
+      }
+    } else {
+      onChange(option);
+    }
+    setIsOpen(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        setFocusedIndex((prev) => (prev + 1) % filteredOptions.length);
+        setIsOpen(true);
+        break;
+      case 'ArrowUp':
+        setFocusedIndex((prev) =>
+          prev === 0 || prev === -1 ? filteredOptions.length - 1 : prev - 1
+        );
+        setIsOpen(true);
+        break;
+      case 'Enter':
+        if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
+          handleOptionClick(filteredOptions[focusedIndex]);
+        }
+        break;
+      case 'Escape':
+        setIsOpen(false);
+        break;
+    }
+  };
+
     return (
         <div className="w-full">
           {label && <label className="block mb-2 text-sm font-medium">{label}</label>}
@@ -64,8 +108,8 @@ const AutoComplete = <T,>({
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder={placeholder}
               value={inputValue}
-              //onChange={handleInputChange}
-              //onKeyDown={handleKeyDown}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               disabled={disabled}
               onClick={() => setIsOpen(!isOpen)}
             />
@@ -85,7 +129,7 @@ const AutoComplete = <T,>({
                     className={`px-4 py-2 cursor-pointer ${
                       index === focusedIndex ? 'bg-gray-200' : 'hover:bg-gray-100'
                     }`}
-                    //onMouseDown={() => handleOptionClick(option)}
+                    onMouseDown={() => handleOptionClick(option)}
                     onMouseEnter={() => setFocusedIndex(index)}
                   >
                     {renderOption
