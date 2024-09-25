@@ -49,19 +49,22 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1 className="text-2xl font-bold mb-4">Enhanced Autocomplete</h1>
-      <Autocomplete
-        label="Fruit"
-        description="Pick a fruit from the list."
-        options={options}
-        onChange={handleOnChange}
-        placeholder="Start typing..."
-        value={selectedValue}
-        debounceTime={100} //Optional debounce
-      />
+    <div className="flex justify-center items-center h-screen">
+      {/* The larger container centered on the screen */}
+      <div className="bg-white shadow-lg p-8 rounded-lg max-w-lg w-full">
+        <h1 className="text-2xl font-bold mb-4 text-center">Select a Fruit</h1>
+        <Autocomplete
+          label="Fruit"
+          description="Pick a fruit from the list."
+          options={options}
+          onChange={handleOnChange}
+          placeholder="Start typing..."
+          value={selectedValue}
+          debounceTime={200}  // Default debounce of 300ms.
+        />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
