@@ -38,8 +38,26 @@ const AutoComplete = <T,>({
     const inputRef = useRef<HTMLInputElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-      // Handle clicking outside the component to close the dropdown.
-  useEffect(() => {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+          if (filterOptions) {
+            // Use custom filtering logic if provided
+            setFilteredOptions(filterOptions(inputValue, options));
+          } else {
+            // Default filtering logic: case-insensitive match
+            setFilteredOptions(
+              options.filter((option) =>
+                String(option).toLowerCase().startsWith(inputValue.toLowerCase())
+              )
+            );
+          }
+        }, debounceTime);
+    
+        return () => clearTimeout(timer);
+      }, [inputValue, options, filterOptions, debounceTime]);
+
+  // Handle clicking outside the component to close the dropdown.
+    useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
