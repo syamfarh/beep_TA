@@ -140,7 +140,7 @@ const AutoComplete = <T,>({
             {isOpen && filteredOptions.length > 0 && (
               <div
                 ref={dropdownRef}
-                className="absolute w-full bg-white border border-gray-200 rounded mt-1 shadow-lg z-10"
+                className="absolute w-full bg-white border border-gray-200 rounded mt-1 shadow-lg z-10 max-h-48 overflow-y-auto"
               >
                 {filteredOptions.map((option, index) => (
                   <div
