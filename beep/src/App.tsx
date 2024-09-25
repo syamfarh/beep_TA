@@ -60,6 +60,7 @@ function App() {
           onChange={handleOnChange}
           placeholder="Start typing..."
           value={selectedValue}
+          //multiple ={true}
           debounceTime={200}  // Default debounce of 300ms.
         />
       </div>

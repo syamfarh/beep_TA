@@ -84,14 +84,22 @@ const AutoComplete = <T,>({
 
   const handleOptionClick = (option: T) => {
     if (multiple) {
-      if (Array.isArray(value)) {
-        onChange([...value, option]);
+      // Treat value as an array
+      const currentValue = Array.isArray(value) ? value : [];
+  
+      if (currentValue.includes(option)) {
+        // Unselect the option (remove it from the value array)
+        onChange(currentValue.filter((v) => v !== option));
+      } else {
+        // Select the option (add it to the value array)
+        onChange([...currentValue, option]);
       }
     } else {
+      // For single selection
       onChange(option);
-      setInputValue(String(option));
+      //setInputValue(String(option));
+      //setIsOpen(false);
     }
-    setIsOpen(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -117,6 +125,13 @@ const AutoComplete = <T,>({
     }
   };
 
+  const isSelected = (option: T) => {
+    if (multiple && Array.isArray(value)) {
+      return value.includes(option);
+    }
+    return value === option;
+  };
+
     return (
         <div className="w-full">
           {label && <label className="block mb-2 text-sm font-medium">{label}</label>}
@@ -124,7 +139,7 @@ const AutoComplete = <T,>({
             <input
               ref={inputRef}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder={placeholder}
               value={inputValue}
               onChange={handleInputChange}
@@ -152,9 +167,13 @@ const AutoComplete = <T,>({
                   onMouseDown={() => handleOptionClick(option)}
                   onMouseEnter={() => setFocusedIndex(index)}
                 >
-                  {renderOption
-                    ? renderOption(option, index === focusedIndex)
-                    : String(option)}
+                  <input
+                    type="checkbox"
+                    checked={isSelected(option)}
+                    onChange={() => handleOptionClick(option)}
+                    className="mr-2"
+                  />
+                  {renderOption ? renderOption(option, isSelected(option)) : String(option)}
                 </div>
               ))
             ) : (
