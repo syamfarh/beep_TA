@@ -137,28 +137,35 @@ const AutoComplete = <T,>({
                 <div className="loader"></div>
               </div>
             )}
-            {isOpen && filteredOptions.length > 0 && (
-              <div
-                ref={dropdownRef}
-                className="absolute w-full bg-white border border-gray-200 rounded mt-1 shadow-lg z-10 max-h-48 overflow-y-auto"
-              >
-                {filteredOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    className={`px-4 py-2 cursor-pointer ${
-                      index === focusedIndex ? 'bg-gray-200' : 'hover:bg-gray-100'
-                    }`}
-                    onMouseDown={() => handleOptionClick(option)}
-                    onMouseEnter={() => setFocusedIndex(index)}
-                  >
-                    {renderOption
-                      ? renderOption(option, index === focusedIndex)
-                      : String(option)}
-                  </div>
-                ))}
+            {isOpen && (
+          <div
+            ref={dropdownRef}
+            className="absolute w-full bg-white border border-gray-200 rounded mt-1 shadow-lg z-10 max-h-48 overflow-y-auto"
+          >
+            {filteredOptions.length > 0 ? ( // Check if options are available
+              filteredOptions.map((option, index) => (
+                <div
+                  key={index}
+                  className={`px-4 py-2 cursor-pointer ${
+                    index === focusedIndex ? 'bg-gray-200' : 'hover:bg-gray-100'
+                  }`}
+                  onMouseDown={() => handleOptionClick(option)}
+                  onMouseEnter={() => setFocusedIndex(index)}
+                >
+                  {renderOption
+                    ? renderOption(option, index === focusedIndex)
+                    : String(option)}
+                </div>
+              ))
+            ) : (
+              // Display "No results found" when no options are available
+              <div className="px-4 py-2 text-gray-500 text-center">
+                No results found
               </div>
             )}
           </div>
+        )}
+      </div>
           {description && <p className="mt-2 text-sm text-gray-500">{description}</p>}
         </div>
       );
