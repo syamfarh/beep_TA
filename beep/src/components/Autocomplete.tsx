@@ -35,13 +35,31 @@ const AutoComplete = <T,>({
     const [isOpen, setIsOpen] = useState(false);
     const [filteredOptions, setFilteredOptions] = useState<T[]>(options);
     const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
+      // Handle clicking outside the component to close the dropdown.
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        !inputRef.current?.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
     return (
         <div className="w-full">
           {label && <label className="block mb-2 text-sm font-medium">{label}</label>}
           <div className={`relative ${disabled ? 'opacity-50' : ''}`}>
             <input
-              //ref={inputRef}
+              ref={inputRef}
               type="text"
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder={placeholder}
@@ -58,7 +76,7 @@ const AutoComplete = <T,>({
             )}
             {isOpen && filteredOptions.length > 0 && (
               <div
-                //ref={dropdownRef}
+                ref={dropdownRef}
                 className="absolute w-full bg-white border border-gray-200 rounded mt-1 shadow-lg z-10"
               >
                 {filteredOptions.map((option, index) => (
