@@ -71,6 +71,7 @@ const AutoComplete = <T,>({
       }
     } else {
       onChange(option);
+      setInputValue(String(option));
     }
     setIsOpen(false);
   };
@@ -143,8 +144,6 @@ const AutoComplete = <T,>({
           {description && <p className="mt-2 text-sm text-gray-500">{description}</p>}
         </div>
       );
-
-
 
   }
 
