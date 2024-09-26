@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Autocomplete from './components/Autocomplete';
 
@@ -60,7 +59,7 @@ function App() {
           onChange={handleOnChange}
           placeholder="Start typing..."
           value={selectedValue}
-          //multiple ={true}
+          multiple ={true}
           debounceTime={200}  // Default debounce of 300ms.
         />
       </div>
